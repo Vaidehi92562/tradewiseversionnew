@@ -1,2 +1,4 @@
 /Users/pvaidehi/tradewiseversionnew/backend/src/main/java/com/tradewise/BackendApplication.java
 /Users/pvaidehi/tradewiseversionnew/backend/src/main/java/com/tradewise/controller/HealthController.java
+/Users/pvaidehi/tradewiseversionnew/backend/src/main/java/com/tradewise/model/User.java
+/Users/pvaidehi/tradewiseversionnew/backend/src/main/java/com/tradewise/repository/UserRepository.java
