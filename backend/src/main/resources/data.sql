@@ -1,3 +1,5 @@
+DELETE FROM stocks;
+
 INSERT INTO stocks (symbol, company_name, sector, exchange, active) VALUES
 ('RELIANCE', 'Reliance Industries', 'Energy', 'NSE', true),
 ('TCS', 'Tata Consultancy Services', 'IT', 'NSE', true),
