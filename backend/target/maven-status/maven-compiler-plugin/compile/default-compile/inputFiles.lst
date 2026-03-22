@@ -4,6 +4,7 @@
 /Users/pvaidehi/tradewiseversionnew/backend/src/main/java/com/tradewise/controller/MarketController.java
 /Users/pvaidehi/tradewiseversionnew/backend/src/main/java/com/tradewise/controller/PortfolioController.java
 /Users/pvaidehi/tradewiseversionnew/backend/src/main/java/com/tradewise/controller/TradeController.java
+/Users/pvaidehi/tradewiseversionnew/backend/src/main/java/com/tradewise/controller/TransactionController.java
 /Users/pvaidehi/tradewiseversionnew/backend/src/main/java/com/tradewise/dto/LoginRequest.java
 /Users/pvaidehi/tradewiseversionnew/backend/src/main/java/com/tradewise/dto/RegisterRequest.java
 /Users/pvaidehi/tradewiseversionnew/backend/src/main/java/com/tradewise/dto/TradeRequest.java
