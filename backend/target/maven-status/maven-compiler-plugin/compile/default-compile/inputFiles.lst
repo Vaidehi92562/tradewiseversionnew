@@ -2,8 +2,10 @@
 /Users/pvaidehi/tradewiseversionnew/backend/src/main/java/com/tradewise/controller/AuthController.java
 /Users/pvaidehi/tradewiseversionnew/backend/src/main/java/com/tradewise/controller/HealthController.java
 /Users/pvaidehi/tradewiseversionnew/backend/src/main/java/com/tradewise/controller/MarketController.java
+/Users/pvaidehi/tradewiseversionnew/backend/src/main/java/com/tradewise/controller/TradeController.java
 /Users/pvaidehi/tradewiseversionnew/backend/src/main/java/com/tradewise/dto/LoginRequest.java
 /Users/pvaidehi/tradewiseversionnew/backend/src/main/java/com/tradewise/dto/RegisterRequest.java
+/Users/pvaidehi/tradewiseversionnew/backend/src/main/java/com/tradewise/dto/TradeRequest.java
 /Users/pvaidehi/tradewiseversionnew/backend/src/main/java/com/tradewise/model/Holding.java
 /Users/pvaidehi/tradewiseversionnew/backend/src/main/java/com/tradewise/model/Stock.java
 /Users/pvaidehi/tradewiseversionnew/backend/src/main/java/com/tradewise/model/Transaction.java
@@ -16,3 +18,4 @@
 /Users/pvaidehi/tradewiseversionnew/backend/src/main/java/com/tradewise/repository/WatchlistRepository.java
 /Users/pvaidehi/tradewiseversionnew/backend/src/main/java/com/tradewise/service/AuthService.java
 /Users/pvaidehi/tradewiseversionnew/backend/src/main/java/com/tradewise/service/MarketService.java
+/Users/pvaidehi/tradewiseversionnew/backend/src/main/java/com/tradewise/service/TradeService.java
