@@ -53,5 +53,16 @@ services:
     ports:
       - "3000:3000"
 
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: tradewise-jenkins
+    restart: always
+    ports:
+      - "8083:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+
 volumes:
   mysql_data:
+  jenkins_home:
