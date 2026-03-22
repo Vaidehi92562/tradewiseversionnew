@@ -1,0 +1,38 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+
+# Logs
+*.log
+logs/
+
+# Env files
+.env
+.env.*
+
+# Backend build files
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+
+# Java compiled files
+*.class
+
+# Node modules (if ever added later)
+frontend/node_modules/
+
+# Coverage / reports
+coverage/
+reports/
+
+# Docker / temp files
+*.pid
+*.tmp
+*.swp
+
+# Mac / misc
+*.out
