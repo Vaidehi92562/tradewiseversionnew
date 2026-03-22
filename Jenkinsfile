@@ -33,21 +33,14 @@ pipeline {
                 }
             }
         }
-
-        stage('Build Docker Images') {
-            steps {
-                sh 'docker build -t tradewise-backend ./backend'
-                sh 'docker build -t tradewise-frontend ./frontend'
-            }
-        }
     }
 
     post {
         success {
-            echo 'TradeWise pipeline completed successfully'
+            echo 'TradeWise CI pipeline completed successfully'
         }
         failure {
-            echo 'TradeWise pipeline failed'
+            echo 'TradeWise CI pipeline failed'
         }
     }
 }
