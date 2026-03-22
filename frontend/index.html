@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TradeWise | Live Paper Trading</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: #ffffff;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top left, rgba(57, 217, 138, 0.16), transparent 28%),
+        radial-gradient(circle at top right, rgba(83, 154, 255, 0.18), transparent 32%),
+        radial-gradient(circle at bottom left, rgba(157, 92, 255, 0.14), transparent 28%),
+        linear-gradient(135deg, #06101c 0%, #0b1930 42%, #10284a 100%);
+    }
+
+    .grid-overlay {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 34px 34px;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .glow {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(70px);
+      opacity: 0.35;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .glow-one {
+      width: 260px;
+      height: 260px;
+      top: 80px;
+      left: 70px;
+      background: rgba(57, 217, 138, 0.45);
+    }
+
+    .glow-two {
+      width: 280px;
+      height: 280px;
+      right: 60px;
+      top: 140px;
+      background: rgba(77, 182, 255, 0.35);
+    }
+
+    .glow-three {
+      width: 220px;
+      height: 220px;
+      left: 40%;
+      bottom: 20px;
+      background: rgba(157, 92, 255, 0.28);
+    }
+
+    .navbar,
+    .hero,
+    .stats-strip {
+      position: relative;
+      z-index: 2;
+    }
+
+    .navbar {
+      width: 100%;
+      padding: 24px 72px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .logo span {
+      color: #39d98a;
+      text-shadow: 0 0 18px rgba(57, 217, 138, 0.35);
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 14px;
+    }
+
+    .nav-btn {
+      padding: 11px 20px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.07);
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      backdrop-filter: blur(12px);
+      transition: 0.3s ease;
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.14);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+    }
+
+    .hero {
+      width: 100%;
+      min-height: calc(100vh - 100px);
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      align-items: center;
+      padding: 28px 72px 28px;
+      gap: 46px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #dff6ea;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      backdrop-filter: blur(10px);
+    }
+
+    .badge-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #39d98a;
+      box-shadow: 0 0 12px rgba(57, 217, 138, 0.8);
+    }
+
+    .hero-text h1 {
+      font-size: 68px;
+      line-height: 1.04;
+      margin-bottom: 20px;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+    }
+
+    .hero-text h1 .highlight {
+      background: linear-gradient(90deg, #39d98a, #7ef6c0, #9cd3ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-text p {
+      font-size: 18px;
+      line-height: 1.9;
+      color: #d5e2f0;
+      max-width: 650px;
+      margin-bottom: 34px;
+    }
+
+    .cta-group {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+    }
+
+    .primary-btn,
+    .secondary-btn {
+      padding: 16px 28px;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .primary-btn {
+      color: #07111c;
+      background: linear-gradient(135deg, #39d98a, #77f0b9);
+      box-shadow: 0 18px 38px rgba(57, 217, 138, 0.26);
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-3px) scale(1.01);
+      box-shadow: 0 20px 42px rgba(57, 217, 138, 0.34);
+    }
+
+    .secondary-btn {
+      color: #ffffff;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.14);
+      backdrop-filter: blur(10px);
+    }
+
+    .secondary-btn:hover {
+      transform: translateY(-3px);
+      background: rgba(255,255,255,0.12);
+    }
+
+    .hero-points {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      max-width: 620px;
+    }
+
+    .point-card {
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 14px 40px rgba(0,0,0,0.18);
+    }
+
+    .point-title {
+      font-size: 15px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: #ffffff;
+    }
+
+    .point-desc {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #c9d9ea;
+    }
+
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    .dashboard-shell {
+      width: 100%;
+      max-width: 530px;
+      padding: 18px;
+      border-radius: 34px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.14), rgba(255,255,255,0.04));
+      border: 1px solid rgba(255,255,255,0.14);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 28px 80px rgba(0,0,0,0.34);
+      transform: rotate(-2deg);
+    }
+
+    .dashboard-card {
+      background: linear-gradient(180deg, rgba(9, 18, 31, 0.96), rgba(13, 28, 49, 0.95));
+      border-radius: 28px;
+      padding: 24px;
+      transform: rotate(2deg);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .live-badge {
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(57, 217, 138, 0.16);
+      color: #7ef2b8;
+      font-size: 12px;
+      font-weight: 800;
+      border: 1px solid rgba(57, 217, 138, 0.2);
+    }
+
+    .chart-box {
+      height: 120px;
+      border-radius: 20px;
+      padding: 18px;
+      margin-bottom: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chart-line {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 22px;
+      height: 65px;
+      border-bottom: 2px solid rgba(255,255,255,0.08);
+    }
+
+    .chart-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .metric-box {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .metric-label {
+      font-size: 12px;
+      color: #abc0d5;
+      margin-bottom: 8px;
+      letter-spacing: 0.4px;
+    }
+
+    .metric-value {
+      font-size: 25px;
+      font-weight: 800;
+    }
+
+    .green {
+      color: #39d98a;
+    }
+
+    .watchlist-box {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .watchlist-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .watchlist-header h3 {
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .watchlist-header span {
+      color: #9bc5ff;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .stock-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .stock-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .stock-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stock-name {
+      font-size: 14px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .stock-sub {
+      font-size: 12px;
+      color: #9ab0c7;
+    }
+
+    .stock-right {
+      text-align: right;
+    }
+
+    .stock-price {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      color: #ebf3fb;
+      margin-bottom: 4px;
+    }
+
+    .stock-change {
+      font-size: 13px;
+      font-weight: 800;
+      color: #39d98a;
+    }
+
+    .stats-strip {
+      width: calc(100% - 144px);
+      margin: 0 72px 48px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .stats-card {
+      padding: 20px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 14px 36px rgba(0,0,0,0.18);
+    }
+
+    .stats-card h4 {
+      font-size: 13px;
+      color: #b8cae0;
+      margin-bottom: 8px;
+    }
+
+    .stats-card p {
+      font-size: 26px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    @media (max-width: 1100px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 30px 24px;
+      }
+
+      .stats-strip {
+        width: calc(100% - 48px);
+        margin: 0 24px 40px;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .navbar {
+        padding: 22px 24px;
+      }
+
+      .hero-text h1 {
+        font-size: 48px;
+      }
+
+      .hero-points {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .navbar {
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .nav-buttons,
+      .cta-group {
+        width: 100%;
+        flex-direction: column;
+      }
+
+      .nav-btn,
+      .primary-btn,
+      .secondary-btn {
+        width: 100%;
+      }
+
+      .hero-text h1 {
+        font-size: 36px;
+      }
+
+      .hero-text p {
+        font-size: 15px;
+      }
+
+      .metric-grid,
+      .stats-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard-shell {
+        transform: none;
+      }
+
+      .dashboard-card {
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-overlay"></div>
+  <div class="glow glow-one"></div>
+  <div class="glow glow-two"></div>
+  <div class="glow glow-three"></div>
+
+  <nav class="navbar">
+    <div class="logo">Trade<span>Wise</span></div>
+    <div class="nav-buttons">
+      <button class="nav-btn" onclick="goToLogin()">Login</button>
+      <button class="nav-btn" onclick="goToRegister()">Register</button>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-text">
+      <div class="badge">
+        <span class="badge-dot"></span>
+        DevOps-Powered Virtual Trading Platform
+      </div>
+
+      <h1>
+        Learn, Simulate &amp; Grow with
+        <span class="highlight">Live Paper Trading</span>
+      </h1>
+
+      <p>
+        TradeWise gives you an Upstox-inspired trading experience with portfolio tracking,
+        watchlists, transaction history, and market-driven simulation — all wrapped inside
+        a polished full-stack DevOps project.
+      </p>
+
+      <div class="cta-group">
+        <button class="primary-btn" onclick="goToRegister()">Start Trading Virtually</button>
+        <button class="secondary-btn" onclick="goToLogin()">Login to Dashboard</button>
+      </div>
+
+      <div class="hero-points">
+        <div class="point-card">
+          <div class="point-title">Smart Market Simulation</div>
+          <div class="point-desc">Experience realistic virtual stock buying and selling with portfolio updates and market-style flows.</div>
+        </div>
+
+        <div class="point-card">
+          <div class="point-title">Beautiful Portfolio Tracking</div>
+          <div class="point-desc">Monitor holdings, gain-loss movement, and transaction insights in one powerful interface.</div>
+        </div>
+
+        <div class="point-card">
+          <div class="point-title">Watchlist &amp; Insights</div>
+          <div class="point-desc">Track selected stocks, compare symbols, and keep an eye on what matters most to you.</div>
+        </div>
+
+        <div class="point-card">
+          <div class="point-title">DevOps as the Hero</div>
+          <div class="point-desc">Built with backend APIs, monitoring, containers, CI/CD, and scalable deployment mindset.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="dashboard-shell">
+        <div class="dashboard-card">
+          <div class="card-top">
+            <div class="card-title">Market Snapshot</div>
+            <div class="live-badge">LIVE VIEW</div>
+          </div>
+
+          <div class="chart-box">
+            <svg class="chart-svg" viewBox="0 0 400 120" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="lineGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#39d98a" />
+                  <stop offset="100%" stop-color="#8bd9ff" />
+                </linearGradient>
+              </defs>
+              <path d="M0 85 C35 70, 55 78, 85 60 C120 40, 145 48, 175 30 C205 13, 235 20, 270 38 C305 56, 335 44, 365 24 C382 14, 392 18, 400 10"
+                    fill="none"
+                    stroke="url(#lineGlow)"
+                    stroke-width="5"
+                    stroke-linecap="round"/>
+            </svg>
+          </div>
+
+          <div class="metric-grid">
+            <div class="metric-box">
+              <div class="metric-label">Portfolio Value</div>
+              <div class="metric-value">₹1,24,580</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-label">Today's P&amp;L</div>
+              <div class="metric-value green">+₹4,210</div>
+            </div>
+          </div>
+
+          <div class="watchlist-box">
+            <div class="watchlist-header">
+              <h3>Trending Watchlist</h3>
+              <span>Top Movers</span>
+            </div>
+
+            <div class="stock-row">
+              <div class="stock-left">
+                <span class="stock-name">RELIANCE</span>
+                <span class="stock-sub">Energy</span>
+              </div>
+              <div class="stock-right">
+                <span class="stock-price">₹2,945.50</span>
+                <span class="stock-change">+1.32%</span>
+              </div>
+            </div>
+
+            <div class="stock-row">
+              <div class="stock-left">
+                <span class="stock-name">TCS</span>
+                <span class="stock-sub">IT Services</span>
+              </div>
+              <div class="stock-right">
+                <span class="stock-price">₹4,118.10</span>
+                <span class="stock-change">+0.84%</span>
+              </div>
+            </div>
+
+            <div class="stock-row">
+              <div class="stock-left">
+                <span class="stock-name">INFY</span>
+                <span class="stock-sub">Technology</span>
+              </div>
+              <div class="stock-right">
+                <span class="stock-price">₹1,782.35</span>
+                <span class="stock-change">+1.11%</span>
+              </div>
+            </div>
+
+            <div class="stock-row">
+              <div class="stock-left">
+                <span class="stock-name">HDFCBANK</span>
+                <span class="stock-sub">Banking</span>
+              </div>
+              <div class="stock-right">
+                <span class="stock-price">₹1,603.20</span>
+                <span class="stock-change">+0.65%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats-strip">
+    <div class="stats-card">
+      <h4>Virtual Capital</h4>
+      <p>₹10L+</p>
+    </div>
+    <div class="stats-card">
+      <h4>Tracked Stocks</h4>
+      <p>8+</p>
+    </div>
+    <div class="stats-card">
+      <h4>Trade Simulation</h4>
+      <p>Buy/Sell</p>
+    </div>
+    <div class="stats-card">
+      <h4>Backend APIs</h4>
+      <p>Live Ready</p>
+    </div>
+  </section>
+
+  <script>
+    function goToLogin() {
+      window.location.href = "login.html";
+    }
+
+    function goToRegister() {
+      window.location.href = "register.html";
+    }
+  </script>
+</body>
+</html>

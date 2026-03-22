@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tradewise-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tradewise-backend
+  template:
+    metadata:
+      labels:
+        app: tradewise-backend
+    spec:
+      containers:
+        - name: tradewise-backend
+          image: tradewise-backend:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://mysql:3306/tradewisenewversion
+            - name: SPRING_DATASOURCE_USERNAME
+              value: root
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: Vaidehi@123

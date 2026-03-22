@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TradeWise | Transactions</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(57, 217, 138, 0.10), transparent 24%),
+        radial-gradient(circle at bottom right, rgba(91, 142, 255, 0.14), transparent 30%),
+        linear-gradient(135deg, #06101c 0%, #09182c 42%, #0f2748 100%);
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+
+    .page-shell {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    .ambient {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.22;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .ambient.one {
+      width: 260px;
+      height: 260px;
+      background: #39d98a;
+      top: 90px;
+      left: 170px;
+    }
+
+    .ambient.two {
+      width: 280px;
+      height: 280px;
+      background: #5b8eff;
+      right: 80px;
+      top: 100px;
+    }
+
+    .sidebar {
+      position: relative;
+      z-index: 2;
+      padding: 28px 20px;
+      background: rgba(7, 15, 27, 0.78);
+      border-right: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(18px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .brand {
+      font-size: 30px;
+      font-weight: 800;
+      margin-bottom: 28px;
+    }
+
+    .brand span {
+      color: #39d98a;
+    }
+
+    .user-card {
+      padding: 18px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(57,217,138,0.18), rgba(91,142,255,0.12));
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 24px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.18);
+    }
+
+    .user-mini {
+      font-size: 12px;
+      color: #d8e7f5;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .user-name {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .user-email {
+      font-size: 13px;
+      color: #c8d8e8;
+      word-break: break-word;
+    }
+
+    .menu-title {
+      font-size: 12px;
+      color: #8fa8c1;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+    }
+
+    .nav-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .nav-item {
+      width: 100%;
+      text-align: left;
+      padding: 14px 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.05);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .nav-item:hover {
+      transform: translateX(4px);
+      background: rgba(255,255,255,0.10);
+    }
+
+    .nav-item.active {
+      background: linear-gradient(135deg, rgba(57,217,138,0.20), rgba(57,217,138,0.08));
+      border-color: rgba(57,217,138,0.25);
+      color: #9ef5c9;
+    }
+
+    .logout-btn {
+      margin-top: 22px;
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 16px;
+      background: rgba(255, 92, 120, 0.14);
+      color: #ffb7c5;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      border: 1px solid rgba(255, 92, 120, 0.20);
+    }
+
+    .main-content {
+      position: relative;
+      z-index: 2;
+      padding: 28px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .title-block h1 {
+      font-size: 38px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .title-block p {
+      font-size: 15px;
+      color: #c5d7e8;
+      line-height: 1.7;
+    }
+
+    .live-pill {
+      padding: 11px 18px;
+      border-radius: 999px;
+      background: rgba(57,217,138,0.16);
+      color: #94f3c3;
+      border: 1px solid rgba(57,217,138,0.24);
+      font-size: 13px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .summary-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .glass-card {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 26px;
+      backdrop-filter: blur(18px);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.18);
+    }
+
+    .summary-card {
+      padding: 22px;
+    }
+
+    .summary-card h4 {
+      font-size: 13px;
+      color: #bed0e2;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .summary-card p {
+      font-size: 30px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .summary-card span {
+      font-size: 13px;
+      color: #d8e7f4;
+    }
+
+    .transactions-card {
+      padding: 22px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .section-head h3 {
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .section-head span {
+      color: #9bb9d4;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .transactions-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .transaction-item {
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      display: grid;
+      grid-template-columns: 1.1fr 0.8fr 0.8fr 0.8fr;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .transaction-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .transaction-sub {
+      font-size: 13px;
+      color: #aabdd0;
+    }
+
+    .transaction-metric h5 {
+      font-size: 12px;
+      color: #9db5ca;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .transaction-metric p {
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .buy {
+      color: #39d98a;
+    }
+
+    .sell {
+      color: #ffb7c5;
+    }
+
+    .empty-box {
+      padding: 28px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #9db5ca;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 1100px) {
+      .page-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        border-right: none;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+      }
+
+      .summary-row {
+        grid-template-columns: 1fr;
+      }
+
+      .transaction-item {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .main-content {
+        padding: 18px;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .title-block h1 {
+        font-size: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient one"></div>
+  <div class="ambient two"></div>
+
+  <div class="page-shell">
+    <aside class="sidebar">
+      <div>
+        <div class="brand">Trade<span>Wise</span></div>
+
+        <div class="user-card">
+          <div class="user-mini">Logged in as</div>
+          <div class="user-name" id="userName">Trader</div>
+          <div class="user-email" id="userEmail">user@example.com</div>
+        </div>
+
+        <div class="menu-title">Navigation</div>
+        <div class="nav-menu">
+          <button class="nav-item" onclick="goToPage('dashboard.html')">Dashboard</button>
+          <button class="nav-item" onclick="goToPage('market.html')">Market</button>
+          <button class="nav-item" onclick="goToPage('portfolio.html')">Portfolio</button>
+          <button class="nav-item" onclick="goToPage('watchlist.html')">Watchlist</button>
+          <button class="nav-item active">Transactions</button>
+        </div>
+      </div>
+
+      <div>
+        <button class="logout-btn" onclick="logoutUser()">Logout</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="topbar">
+        <div class="title-block">
+          <h1>Transaction Timeline</h1>
+          <p>Review all your buy and sell actions in a clean premium activity history view.</p>
+        </div>
+        <div class="live-pill">TRANSACTION HISTORY</div>
+      </div>
+
+      <section class="summary-row">
+        <div class="glass-card summary-card">
+          <h4>Total Transactions</h4>
+          <p id="totalTransactions">0</p>
+          <span>All recorded buy and sell actions</span>
+        </div>
+
+        <div class="glass-card summary-card">
+          <h4>Total Buy Trades</h4>
+          <p id="buyCount">0</p>
+          <span>Count of buy transactions</span>
+        </div>
+
+        <div class="glass-card summary-card">
+          <h4>Total Sell Trades</h4>
+          <p id="sellCount">0</p>
+          <span>Count of sell transactions</span>
+        </div>
+      </section>
+
+      <section class="glass-card transactions-card">
+        <div class="section-head">
+          <h3>Your Transactions</h3>
+          <span>Latest first</span>
+        </div>
+
+        <div id="transactionsList" class="transactions-list">
+          <div class="empty-box">Loading transactions...</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const userName = localStorage.getItem("userName") || "Trader";
+    const userEmail = localStorage.getItem("userEmail") || "user@example.com";
+
+    document.getElementById("userName").textContent = userName;
+    document.getElementById("userEmail").textContent = userEmail;
+
+    function goToPage(page) {
+      window.location.href = page;
+    }
+
+    function logoutUser() {
+      localStorage.removeItem("userName");
+      localStorage.removeItem("userEmail");
+      window.location.href = "login.html";
+    }
+
+    async function loadTransactions() {
+      const transactionsList = document.getElementById("transactionsList");
+
+      try {
+        const response = await fetch(`http://localhost:8080/api/transactions?email=${encodeURIComponent(userEmail)}`);
+        const data = await response.json();
+
+        const buyCount = data.filter(item => item.type === "BUY").length;
+        const sellCount = data.filter(item => item.type === "SELL").length;
+
+        document.getElementById("totalTransactions").textContent = data.length;
+        document.getElementById("buyCount").textContent = buyCount;
+        document.getElementById("sellCount").textContent = sellCount;
+
+        if (!data.length) {
+          transactionsList.innerHTML = `<div class="empty-box">No transactions yet. Go to the market page and place your first mock trade.</div>`;
+          return;
+        }
+
+        transactionsList.innerHTML = "";
+
+        data.forEach(item => {
+          const row = document.createElement("div");
+          row.className = "transaction-item";
+
+          const typeClass = item.type === "BUY" ? "buy" : "sell";
+
+          row.innerHTML = `
+            <div>
+              <div class="transaction-title ${typeClass}">${item.type} • ${item.symbol}</div>
+              <div class="transaction-sub">Recorded in your trading history</div>
+            </div>
+
+            <div class="transaction-metric">
+              <h5>Quantity</h5>
+              <p>${item.quantity}</p>
+            </div>
+
+            <div class="transaction-metric">
+              <h5>Price</h5>
+              <p>₹${item.price}</p>
+            </div>
+
+            <div class="transaction-metric">
+              <h5>Total Amount</h5>
+              <p class="${typeClass}">₹${item.totalAmount}</p>
+            </div>
+          `;
+
+          transactionsList.appendChild(row);
+        });
+      } catch (error) {
+        transactionsList.innerHTML = `<div class="empty-box">Unable to load transactions. Make sure backend is running.</div>`;
+        document.getElementById("totalTransactions").textContent = "0";
+        document.getElementById("buyCount").textContent = "0";
+        document.getElementById("sellCount").textContent = "0";
+      }
+    }
+
+    loadTransactions();
+  </script>
+</body>
+</html>

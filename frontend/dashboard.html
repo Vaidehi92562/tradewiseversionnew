@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TradeWise | Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(57, 217, 138, 0.10), transparent 25%),
+        radial-gradient(circle at top right, rgba(91, 142, 255, 0.14), transparent 28%),
+        linear-gradient(135deg, #06101c 0%, #09192f 42%, #0f2748 100%);
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+
+    .page-shell {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    .ambient {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.22;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .ambient.one {
+      width: 240px;
+      height: 240px;
+      background: #39d98a;
+      top: 70px;
+      left: 180px;
+    }
+
+    .ambient.two {
+      width: 300px;
+      height: 300px;
+      background: #5b8eff;
+      right: 60px;
+      top: 80px;
+    }
+
+    .ambient.three {
+      width: 220px;
+      height: 220px;
+      background: #8f62ff;
+      bottom: 30px;
+      left: 45%;
+    }
+
+    .sidebar {
+      position: relative;
+      z-index: 2;
+      padding: 28px 20px;
+      background: rgba(7, 15, 27, 0.78);
+      border-right: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(18px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .brand {
+      font-size: 30px;
+      font-weight: 800;
+      margin-bottom: 28px;
+    }
+
+    .brand span {
+      color: #39d98a;
+    }
+
+    .user-card {
+      padding: 18px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(57,217,138,0.18), rgba(91,142,255,0.12));
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 24px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.18);
+    }
+
+    .user-mini {
+      font-size: 12px;
+      color: #d8e7f5;
+      margin-bottom: 8px;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+
+    .user-name {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .user-email {
+      font-size: 13px;
+      color: #c8d8e8;
+      word-break: break-word;
+    }
+
+    .menu-title {
+      font-size: 12px;
+      color: #8fa8c1;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .nav-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .nav-item {
+      width: 100%;
+      text-align: left;
+      padding: 14px 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.05);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .nav-item:hover {
+      transform: translateX(4px);
+      background: rgba(255,255,255,0.10);
+    }
+
+    .nav-item.active {
+      background: linear-gradient(135deg, rgba(57,217,138,0.20), rgba(57,217,138,0.08));
+      border-color: rgba(57,217,138,0.25);
+      color: #9ef5c9;
+    }
+
+    .logout-btn {
+      margin-top: 22px;
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 16px;
+      background: rgba(255, 92, 120, 0.14);
+      color: #ffb7c5;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      border: 1px solid rgba(255, 92, 120, 0.20);
+      transition: 0.3s ease;
+    }
+
+    .logout-btn:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 92, 120, 0.20);
+    }
+
+    .main-content {
+      position: relative;
+      z-index: 2;
+      padding: 28px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .welcome-block h1 {
+      font-size: 38px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      letter-spacing: -0.8px;
+    }
+
+    .welcome-block p {
+      font-size: 15px;
+      color: #c5d7e8;
+      line-height: 1.7;
+    }
+
+    .live-pill {
+      padding: 11px 18px;
+      border-radius: 999px;
+      background: rgba(57,217,138,0.16);
+      color: #94f3c3;
+      border: 1px solid rgba(57,217,138,0.24);
+      font-size: 13px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .hero-panel {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 20px;
+      margin-bottom: 22px;
+    }
+
+    .glass-card {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 28px;
+      backdrop-filter: blur(18px);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.18);
+    }
+
+    .hero-left {
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-left::before {
+      content: "";
+      position: absolute;
+      inset: auto -40px -60px auto;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(57,217,138,0.25), transparent 70%);
+    }
+
+    .hero-badge {
+      display: inline-block;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.10);
+      color: #d9ebfb;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    .hero-left h2 {
+      font-size: 34px;
+      line-height: 1.15;
+      margin-bottom: 14px;
+      font-weight: 800;
+      max-width: 630px;
+    }
+
+    .hero-left h2 span {
+      color: #7ef2b8;
+    }
+
+    .hero-left p {
+      font-size: 15px;
+      line-height: 1.85;
+      color: #d0dfef;
+      max-width: 620px;
+      margin-bottom: 22px;
+    }
+
+    .quick-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .quick-btn {
+      padding: 14px 20px;
+      border-radius: 16px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 800;
+      transition: 0.3s ease;
+    }
+
+    .quick-btn.primary {
+      background: linear-gradient(135deg, #39d98a, #7ef2b8);
+      color: #06111c;
+      box-shadow: 0 16px 32px rgba(57,217,138,0.24);
+    }
+
+    .quick-btn.primary:hover {
+      transform: translateY(-2px);
+    }
+
+    .quick-btn.secondary {
+      background: rgba(255,255,255,0.08);
+      color: #ffffff;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .quick-btn.secondary:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.12);
+    }
+
+    .hero-right {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .mini-chart {
+      height: 150px;
+      border-radius: 22px;
+      padding: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .mini-chart svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .trend-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .trend-box {
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .trend-box h4 {
+      font-size: 12px;
+      color: #a9bfd4;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .trend-box p {
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    .green {
+      color: #39d98a;
+    }
+
+    .red {
+      color: #ffb7c5;
+    }
+
+    .grid-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .metric-card {
+      padding: 22px;
+      border-radius: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric-card::after {
+      content: "";
+      position: absolute;
+      right: -30px;
+      bottom: -30px;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+    }
+
+    .metric-card h4 {
+      font-size: 13px;
+      color: #bed0e2;
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .metric-card p {
+      font-size: 30px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .metric-card span {
+      font-size: 13px;
+      color: #d8e7f4;
+      position: relative;
+      z-index: 2;
+    }
+
+    .metric-a {
+      background: linear-gradient(135deg, rgba(57,217,138,0.18), rgba(57,217,138,0.06));
+      border: 1px solid rgba(57,217,138,0.18);
+    }
+
+    .metric-b {
+      background: linear-gradient(135deg, rgba(91,142,255,0.18), rgba(91,142,255,0.06));
+      border: 1px solid rgba(91,142,255,0.18);
+    }
+
+    .metric-c {
+      background: linear-gradient(135deg, rgba(143,98,255,0.18), rgba(143,98,255,0.06));
+      border: 1px solid rgba(143,98,255,0.18);
+    }
+
+    .bottom-layout {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 20px;
+    }
+
+    .activity-card,
+    .watch-card {
+      padding: 22px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .section-head h3 {
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .section-head span {
+      color: #9bb9d4;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .activity-list,
+    .watch-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .activity-item,
+    .watch-item {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .activity-left,
+    .watch-left {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .activity-title,
+    .watch-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .activity-sub,
+    .watch-sub {
+      font-size: 12px;
+      color: #aabdd0;
+    }
+
+    .activity-right,
+    .watch-right {
+      text-align: right;
+    }
+
+    .activity-right strong,
+    .watch-right strong {
+      display: block;
+      font-size: 14px;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .activity-right span,
+    .watch-right span {
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .empty-text {
+      color: #9db5ca;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 1100px) {
+      .page-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        border-right: none;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+      }
+
+      .hero-panel,
+      .bottom-layout,
+      .grid-section {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .main-content {
+        padding: 18px;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .welcome-block h1 {
+        font-size: 30px;
+      }
+
+      .hero-left h2 {
+        font-size: 28px;
+      }
+
+      .trend-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient one"></div>
+  <div class="ambient two"></div>
+  <div class="ambient three"></div>
+
+  <div class="page-shell">
+    <aside class="sidebar">
+      <div>
+        <div class="brand">Trade<span>Wise</span></div>
+
+        <div class="user-card">
+          <div class="user-mini">Logged in as</div>
+          <div class="user-name" id="userName">Trader</div>
+          <div class="user-email" id="userEmail">user@example.com</div>
+        </div>
+
+        <div class="menu-title">Navigation</div>
+        <div class="nav-menu">
+          <button class="nav-item active">Dashboard</button>
+          <button class="nav-item" onclick="goToPage('market.html')">Market</button>
+          <button class="nav-item" onclick="goToPage('portfolio.html')">Portfolio</button>
+          <button class="nav-item" onclick="goToPage('watchlist.html')">Watchlist</button>
+          <button class="nav-item" onclick="goToPage('transactions.html')">Transactions</button>
+        </div>
+      </div>
+
+      <div>
+        <button class="logout-btn" onclick="logoutUser()">Logout</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="topbar">
+        <div class="welcome-block">
+          <h1>Hello, <span id="welcomeName">Trader</span> 👋</h1>
+          <p>
+            Welcome to your beautifully crafted trading command center.
+            Track your portfolio, monitor activity, and move through your paper trading journey in style.
+          </p>
+        </div>
+        <div class="live-pill">DASHBOARD LIVE VIEW</div>
+      </div>
+
+      <section class="hero-panel">
+        <div class="glass-card hero-left">
+          <div class="hero-badge">Portfolio Intelligence Hub</div>
+          <h2>
+            Your market story begins with
+            <span>clear insights and smarter simulation</span>
+          </h2>
+          <p>
+            This dashboard now reflects your real app state with live portfolio value, recent trades,
+            and market highlights so the project feels polished and production-like.
+          </p>
+
+          <div class="quick-actions">
+            <button class="quick-btn primary" onclick="goToPage('market.html')">Explore Market</button>
+            <button class="quick-btn secondary" onclick="goToPage('portfolio.html')">View Portfolio</button>
+          </div>
+        </div>
+
+        <div class="glass-card hero-right">
+          <div class="mini-chart">
+            <svg viewBox="0 0 400 140" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="chartGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#39d98a"></stop>
+                  <stop offset="100%" stop-color="#7dbdff"></stop>
+                </linearGradient>
+              </defs>
+              <path d="M0 112 C35 96, 60 104, 100 80 C135 58, 162 72, 192 48 C223 20, 256 28, 287 52 C316 75, 346 55, 370 34 C384 22, 392 16, 400 10"
+                fill="none"
+                stroke="url(#chartGradient)"
+                stroke-width="6"
+                stroke-linecap="round"></path>
+            </svg>
+          </div>
+
+          <div class="trend-row">
+            <div class="trend-box">
+              <h4>Watchlist Count</h4>
+              <p id="watchlistCount">0</p>
+            </div>
+            <div class="trend-box">
+              <h4>Market Pulse</h4>
+              <p id="marketPulse" class="green">Bullish</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid-section">
+        <div class="glass-card metric-card metric-a">
+          <h4>Total Holdings</h4>
+          <p id="holdingCount">0</p>
+          <span>Stocks currently in your portfolio</span>
+        </div>
+
+        <div class="glass-card metric-card metric-b">
+          <h4>Live Portfolio Value</h4>
+          <p id="portfolioValue">₹0</p>
+          <span>Calculated from latest market prices</span>
+        </div>
+
+        <div class="glass-card metric-card metric-c">
+          <h4>Transactions Logged</h4>
+          <p id="transactionCount">0</p>
+          <span>Buy and sell activity recorded</span>
+        </div>
+      </section>
+
+      <section class="bottom-layout">
+        <div class="glass-card activity-card">
+          <div class="section-head">
+            <h3>Recent Activity</h3>
+            <span>Latest trades</span>
+          </div>
+          <div class="activity-list" id="activityList">
+            <div class="empty-text">Loading recent transactions...</div>
+          </div>
+        </div>
+
+        <div class="glass-card watch-card">
+          <div class="section-head">
+            <h3>Tracked Highlights</h3>
+            <span>Live market highlights</span>
+          </div>
+          <div class="watch-list" id="watchHighlights">
+            <div class="empty-text">Loading market highlights...</div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const userName = localStorage.getItem("userName") || "Trader";
+    const userEmail = localStorage.getItem("userEmail") || "user@example.com";
+
+    document.getElementById("userName").textContent = userName;
+    document.getElementById("userEmail").textContent = userEmail;
+    document.getElementById("welcomeName").textContent = userName;
+
+    function goToPage(page) {
+      window.location.href = page;
+    }
+
+    function logoutUser() {
+      localStorage.removeItem("userName");
+      localStorage.removeItem("userEmail");
+      window.location.href = "login.html";
+    }
+
+    async function loadDashboardData() {
+      const activityList = document.getElementById("activityList");
+      const watchHighlights = document.getElementById("watchHighlights");
+
+      try {
+        const [portfolioRes, transactionsRes, marketRes, watchlistRes] = await Promise.all([
+          fetch(`http://localhost:8080/api/portfolio?email=${encodeURIComponent(userEmail)}`),
+          fetch(`http://localhost:8080/api/transactions?email=${encodeURIComponent(userEmail)}`),
+          fetch("http://localhost:8080/api/market/stocks"),
+          fetch(`http://localhost:8080/api/watchlist?email=${encodeURIComponent(userEmail)}`)
+        ]);
+
+        const portfolioData = await portfolioRes.json();
+        const transactionsData = await transactionsRes.json();
+        const marketData = await marketRes.json();
+        const watchlistData = await watchlistRes.json();
+
+        const marketMap = {};
+        marketData.forEach(stock => {
+          marketMap[stock.symbol] = stock;
+        });
+
+        document.getElementById("holdingCount").textContent = portfolioData.length;
+        document.getElementById("transactionCount").textContent = transactionsData.length;
+        document.getElementById("watchlistCount").textContent = watchlistData.length;
+
+        let portfolioValue = 0;
+        portfolioData.forEach(item => {
+          const livePrice = Number(marketMap[item.symbol]?.currentPrice || item.averageBuyPrice || 0);
+          portfolioValue += Number(item.quantity || 0) * livePrice;
+        });
+        document.getElementById("portfolioValue").textContent = `₹${portfolioValue.toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
+
+        const positiveCount = marketData.filter(stock => Number(stock.change) >= 0).length;
+        const negativeCount = marketData.length - positiveCount;
+        const marketPulse = document.getElementById("marketPulse");
+        if (positiveCount >= negativeCount) {
+          marketPulse.textContent = "Bullish";
+          marketPulse.className = "green";
+        } else {
+          marketPulse.textContent = "Bearish";
+          marketPulse.className = "red";
+        }
+
+        if (!transactionsData.length) {
+          activityList.innerHTML = `<div class="empty-text">No transactions yet. Start trading from the market page.</div>`;
+        } else {
+          activityList.innerHTML = "";
+          transactionsData.slice(0, 4).forEach(item => {
+            const typeClass = item.type === "BUY" ? "green" : "red";
+            const row = document.createElement("div");
+            row.className = "activity-item";
+            row.innerHTML = `
+              <div class="activity-left">
+                <div class="activity-title">${item.type} • ${item.symbol}</div>
+                <div class="activity-sub">Quantity: ${item.quantity}</div>
+              </div>
+              <div class="activity-right">
+                <strong>₹${Number(item.totalAmount).toLocaleString(undefined, { maximumFractionDigits: 2 })}</strong>
+                <span class="${typeClass}">${item.type}</span>
+              </div>
+            `;
+            activityList.appendChild(row);
+          });
+        }
+
+        if (!marketData.length) {
+          watchHighlights.innerHTML = `<div class="empty-text">No market data available.</div>`;
+        } else {
+          watchHighlights.innerHTML = "";
+          marketData.slice(0, 3).forEach(stock => {
+            const changeClass = Number(stock.change) >= 0 ? "green" : "red";
+            const changeSign = Number(stock.change) >= 0 ? "+" : "";
+            const row = document.createElement("div");
+            row.className = "watch-item";
+            row.innerHTML = `
+              <div class="watch-left">
+                <div class="watch-title">${stock.symbol}</div>
+                <div class="watch-sub">${stock.companyName}</div>
+              </div>
+              <div class="watch-right">
+                <strong>₹${Number(stock.currentPrice).toFixed(2)}</strong>
+                <span class="${changeClass}">
+                  ${changeSign}${Number(stock.change).toFixed(2)} (${changeSign}${Number(stock.changePercent).toFixed(2)}%)
+                </span>
+              </div>
+            `;
+            watchHighlights.appendChild(row);
+          });
+        }
+      } catch (error) {
+        document.getElementById("holdingCount").textContent = "0";
+        document.getElementById("portfolioValue").textContent = "₹0";
+        document.getElementById("transactionCount").textContent = "0";
+        document.getElementById("watchlistCount").textContent = "0";
+        activityList.innerHTML = `<div class="empty-text">Unable to load dashboard data. Make sure backend is running.</div>`;
+        watchHighlights.innerHTML = `<div class="empty-text">Unable to load market highlights.</div>`;
+      }
+    }
+
+    loadDashboardData();
+    setInterval(loadDashboardData, 2000);
+  </script>
+</body>
+</html>

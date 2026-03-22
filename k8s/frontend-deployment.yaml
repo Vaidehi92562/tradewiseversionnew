@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tradewise-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tradewise-frontend
+  template:
+    metadata:
+      labels:
+        app: tradewise-frontend
+    spec:
+      containers:
+        - name: tradewise-frontend
+          image: tradewise-frontend:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80

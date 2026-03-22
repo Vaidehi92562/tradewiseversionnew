@@ -1,6 +1,6 @@
 package com.tradewise.controller;
 
-import com.tradewise.model.Stock;
+import com.tradewise.dto.MarketStockResponse;
 import com.tradewise.service.MarketService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +19,7 @@ public class MarketController {
     }
 
     @GetMapping("/api/market/stocks")
-    public List<Stock> getAllActiveStocks() {
+    public List<MarketStockResponse> getAllActiveStocks() {
         return marketService.getAllActiveStocks();
     }
 }

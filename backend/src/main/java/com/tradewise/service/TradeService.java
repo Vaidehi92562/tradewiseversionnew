@@ -20,13 +20,16 @@ public class TradeService {
     private final HoldingRepository holdingRepository;
     private final TransactionRepository transactionRepository;
     private final StockRepository stockRepository;
+    private final MarketService marketService;
 
     public TradeService(HoldingRepository holdingRepository,
                         TransactionRepository transactionRepository,
-                        StockRepository stockRepository) {
+                        StockRepository stockRepository,
+                        MarketService marketService) {
         this.holdingRepository = holdingRepository;
         this.transactionRepository = transactionRepository;
         this.stockRepository = stockRepository;
+        this.marketService = marketService;
     }
 
     public Map<String, String> buyStock(TradeRequest request) {
@@ -39,7 +42,7 @@ public class TradeService {
             return response;
         }
 
-        double tradePrice = 100.0;
+        double tradePrice = marketService.getMockLivePrice(request.getSymbol());
 
         Optional<Holding> holdingOptional =
                 holdingRepository.findByUserEmailAndSymbol(request.getEmail(), request.getSymbol());
@@ -78,7 +81,8 @@ public class TradeService {
         transactionRepository.save(transaction);
 
         response.put("status", "SUCCESS");
-        response.put("message", "Stock bought successfully");
+        response.put("message", "Stock bought successfully at live price");
+        response.put("price", String.valueOf(tradePrice));
         return response;
     }
 
@@ -102,7 +106,7 @@ public class TradeService {
             return response;
         }
 
-        double tradePrice = 100.0;
+        double tradePrice = marketService.getMockLivePrice(request.getSymbol());
 
         int remainingQuantity = holding.getQuantity() - request.getQuantity();
 
@@ -124,7 +128,8 @@ public class TradeService {
         transactionRepository.save(transaction);
 
         response.put("status", "SUCCESS");
-        response.put("message", "Stock sold successfully");
+        response.put("message", "Stock sold successfully at live price");
+        response.put("price", String.valueOf(tradePrice));
         return response;
     }
 }

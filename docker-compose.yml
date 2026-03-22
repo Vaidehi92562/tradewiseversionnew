@@ -1,0 +1,57 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: tradewise-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Vaidehi@123
+      MYSQL_DATABASE: tradewisenewversion
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  backend:
+    build: ./backend
+    container_name: tradewise-backend
+    restart: always
+    depends_on:
+      - mysql
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/tradewisenewversion
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Vaidehi@123
+
+  frontend:
+    build: ./frontend
+    container_name: tradewise-frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "8082:80"
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: tradewise-prometheus
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: tradewise-grafana
+    restart: always
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
+
+volumes:
+  mysql_data:
