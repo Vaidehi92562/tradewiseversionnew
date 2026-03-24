@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Funds - TradeWise</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #10213d, #071224 60%, #020817 100%);
+      color: white;
+      min-height: 100vh;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 280px;
+      background: rgba(3, 10, 30, 0.95);
+      border-right: 1px solid rgba(255,255,255,0.06);
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .brand {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 24px;
+    }
+
+    .brand span {
+      color: #86efac;
+    }
+
+    .user-box {
+      background: linear-gradient(135deg, rgba(34,197,94,0.12), rgba(59,130,246,0.12));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 22px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .user-box small {
+      color: #cbd5e1;
+      display: block;
+      margin-bottom: 10px;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    .user-name {
+      font-size: 30px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .user-email {
+      color: #cbd5e1;
+      font-size: 14px;
+      word-break: break-word;
+    }
+
+    .nav-title {
+      color: #94a3b8;
+      font-size: 14px;
+      margin: 12px 0 14px;
+      letter-spacing: 1px;
+    }
+
+    .nav-btn {
+      width: 100%;
+      padding: 18px 24px;
+      margin-bottom: 14px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(17, 24, 39, 0.95);
+      color: white;
+      font-size: 18px;
+      font-weight: 700;
+      text-align: left;
+      cursor: pointer;
+      transition: 0.25s ease;
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(110, 231, 183, 0.35);
+    }
+
+    .nav-btn.active {
+      background: linear-gradient(135deg, rgba(24, 79, 61, 0.95), rgba(9, 33, 52, 0.95));
+      color: #bbf7d0;
+      border-color: rgba(52, 211, 153, 0.35);
+      box-shadow: 0 12px 24px rgba(16, 185, 129, 0.12);
+    }
+
+    .logout-btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(80, 16, 37, 0.95), rgba(46, 11, 31, 0.95));
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .main {
+      flex: 1;
+      padding: 28px;
+    }
+
+    .top-card {
+      background: linear-gradient(135deg, rgba(27, 38, 65, 0.96), rgba(18, 32, 68, 0.96));
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 28px;
+      padding: 30px;
+      margin-bottom: 24px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.16);
+    }
+
+    .top-card h1 {
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+
+    .top-card p {
+      color: #d1d5db;
+      margin-bottom: 22px;
+      line-height: 1.6;
+    }
+
+    .balance-pill {
+      display: inline-block;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(34,197,94,0.12);
+      color: #bbf7d0;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .balance {
+      font-size: 54px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .limit-note {
+      color: #cbd5e1;
+      font-size: 15px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 24px;
+    }
+
+    .card {
+      background: linear-gradient(135deg, rgba(27, 38, 65, 0.96), rgba(18, 32, 68, 0.96));
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.16);
+    }
+
+    .card h2 {
+      font-size: 28px;
+      margin-bottom: 18px;
+    }
+
+    .amount-input {
+      width: 100%;
+      padding: 16px 18px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(8, 15, 34, 0.95);
+      color: white;
+      font-size: 18px;
+      outline: none;
+      margin-bottom: 16px;
+    }
+
+    .quick-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .quick-btn {
+      padding: 12px 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.05);
+      color: white;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .add-btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #4ade80, #22c55e);
+      color: #052e16;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-bottom: 14px;
+    }
+
+    .message {
+      min-height: 24px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .success {
+      color: #86efac;
+    }
+
+    .error {
+      color: #fca5a5;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .mini-stat {
+      background: rgba(255,255,255,0.04);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .mini-stat-label {
+      color: #cbd5e1;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .mini-stat-value {
+      font-size: 28px;
+      font-weight: 800;
+    }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 12px;
+      max-height: 420px;
+      overflow-y: auto;
+    }
+
+    .history-item {
+      background: rgba(255,255,255,0.05);
+      border-radius: 18px;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 14px;
+    }
+
+    .history-item strong {
+      font-size: 17px;
+      display: block;
+      margin-bottom: 6px;
+      color: #86efac;
+    }
+
+    .history-item small {
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+
+    .history-amount {
+      font-size: 20px;
+      font-weight: 800;
+      color: #bbf7d0;
+      white-space: nowrap;
+    }
+
+    .empty {
+      color: #94a3b8;
+      font-style: italic;
+      padding-top: 8px;
+    }
+
+    @media (max-width: 1100px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+      }
+
+      .balance {
+        font-size: 42px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div>
+        <div class="brand">Trade<span>Wise</span></div>
+
+        <div class="user-box">
+          <small>Logged in as</small>
+          <div class="user-name" id="sidebarUserName">User</div>
+          <div class="user-email" id="sidebarUserEmail">user@test.com</div>
+        </div>
+
+        <div class="nav-title">NAVIGATION</div>
+
+        <button class="nav-btn" onclick="location.href='dashboard.html'">Dashboard</button>
+        <button class="nav-btn" onclick="location.href='market.html'">Market</button>
+        <button class="nav-btn" onclick="location.href='portfolio.html'">Portfolio</button>
+        <button class="nav-btn" onclick="location.href='watchlist.html'">Watchlist</button>
+        <button class="nav-btn" onclick="location.href='transactions.html'">Transactions</button>
+        <button class="nav-btn" onclick="location.href='live-track.html'">Live Track</button>
+        <button class="nav-btn active" onclick="location.href='funds.html'">Funds</button>
+      </div>
+
+      <button class="logout-btn" onclick="logoutUser()">Logout</button>
+    </aside>
+
+    <main class="main">
+      <div class="top-card">
+        <div class="balance-pill">Wallet Funding Center</div>
+        <h1>Add Funds</h1>
+        <p>
+          Add money to your TradeWise wallet for paper trading. The maximum allowed wallet
+          balance is ₹50,000.
+        </p>
+        <div class="balance" id="balanceDisplay">₹0</div>
+        <div class="limit-note">Maximum wallet balance allowed: ₹50,000</div>
+      </div>
+
+      <div class="grid">
+        <section class="card">
+          <h2>Top Up Wallet</h2>
+          <input
+            type="number"
+            id="fundAmount"
+            class="amount-input"
+            placeholder="Enter amount to add"
+            min="1"
+          />
+
+          <div class="quick-buttons">
+            <button class="quick-btn" onclick="setQuickAmount(500)">+ ₹500</button>
+            <button class="quick-btn" onclick="setQuickAmount(1000)">+ ₹1,000</button>
+            <button class="quick-btn" onclick="setQuickAmount(5000)">+ ₹5,000</button>
+            <button class="quick-btn" onclick="setQuickAmount(10000)">+ ₹10,000</button>
+            <button class="quick-btn" onclick="setQuickAmount(25000)">+ ₹25,000</button>
+          </div>
+
+          <button class="add-btn" onclick="addFunds()">Add Funds</button>
+          <div id="messageBox" class="message"></div>
+
+          <div class="stats">
+            <div class="mini-stat">
+              <div class="mini-stat-label">Current Balance</div>
+              <div class="mini-stat-value" id="currentBalanceStat">₹0</div>
+            </div>
+            <div class="mini-stat">
+              <div class="mini-stat-label">Remaining Limit</div>
+              <div class="mini-stat-value" id="remainingLimitStat">₹50,000</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Recent Fund Activity</h2>
+          <div id="fundHistory" class="history-list"></div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const MAX_BALANCE = 50000;
+    const BALANCE_KEY = "tradewise_wallet_balance";
+    const HISTORY_KEY = "tradewise_fund_history";
+
+    function formatINR(value) {
+      return "₹" + Number(value).toLocaleString("en-IN");
+    }
+
+    function getBalance() {
+      return Number(localStorage.getItem(BALANCE_KEY)) || 0;
+    }
+
+    function setBalance(value) {
+      localStorage.setItem(BALANCE_KEY, value);
+    }
+
+    function getHistory() {
+      return JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
+    }
+
+    function setHistory(history) {
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+    }
+
+    function updateUI() {
+      const balance = getBalance();
+      const remaining = MAX_BALANCE - balance;
+
+      document.getElementById("balanceDisplay").textContent = formatINR(balance);
+      document.getElementById("currentBalanceStat").textContent = formatINR(balance);
+      document.getElementById("remainingLimitStat").textContent = formatINR(remaining);
+
+      renderHistory();
+      loadUserInfo();
+    }
+
+    function showMessage(text, type) {
+      const box = document.getElementById("messageBox");
+      box.textContent = text;
+      box.className = "message " + type;
+    }
+
+    function setQuickAmount(amount) {
+      document.getElementById("fundAmount").value = amount;
+    }
+
+    function addFunds() {
+      const input = document.getElementById("fundAmount");
+      const amount = Number(input.value);
+      const currentBalance = getBalance();
+
+      if (!amount || amount <= 0) {
+        showMessage("Please enter a valid amount greater than ₹0.", "error");
+        return;
+      }
+
+      if (!Number.isInteger(amount)) {
+        showMessage("Please enter a whole number amount.", "error");
+        return;
+      }
+
+      if (amount > 50000) {
+        showMessage("You cannot add more than ₹50,000 at once.", "error");
+        return;
+      }
+
+      if (currentBalance + amount > MAX_BALANCE) {
+        showMessage("Maximum wallet balance allowed is ₹50,000.", "error");
+        return;
+      }
+
+      const newBalance = currentBalance + amount;
+      setBalance(newBalance);
+
+      const history = getHistory();
+      history.unshift({
+        amount,
+        time: new Date().toLocaleString("en-IN"),
+        balanceAfter: newBalance
+      });
+      setHistory(history.slice(0, 10));
+
+      showMessage(`₹${amount.toLocaleString("en-IN")} added successfully.`, "success");
+      input.value = "";
+      updateUI();
+    }
+
+    function renderHistory() {
+      const list = document.getElementById("fundHistory");
+      const history = getHistory();
+
+      if (!history.length) {
+        list.innerHTML = `<div class="empty">No fund activity yet.</div>`;
+        return;
+      }
+
+      list.innerHTML = history.map(item => `
+        <div class="history-item">
+          <div>
+            <strong>Funds Added</strong>
+            <small>
+              Time: ${item.time}<br>
+              Balance after update: ${formatINR(item.balanceAfter)}
+            </small>
+          </div>
+          <div class="history-amount">+ ${formatINR(item.amount)}</div>
+        </div>
+      `).join("");
+    }
+
+    function loadUserInfo() {
+      const username =
+        localStorage.getItem("loggedInUserName") ||
+        localStorage.getItem("username") ||
+        localStorage.getItem("userName") ||
+        "User";
+
+      const email =
+        localStorage.getItem("loggedInUserEmail") ||
+        localStorage.getItem("email") ||
+        "user@test.com";
+
+      document.getElementById("sidebarUserName").textContent = username;
+      document.getElementById("sidebarUserEmail").textContent = email;
+    }
+
+    function logoutUser() {
+      localStorage.removeItem("loggedInUserName");
+      localStorage.removeItem("loggedInUserEmail");
+      localStorage.removeItem("username");
+      localStorage.removeItem("userName");
+      localStorage.removeItem("email");
+      window.location.href = "login.html";
+    }
+
+    updateUI();
+  </script>
+</body>
+</html>
